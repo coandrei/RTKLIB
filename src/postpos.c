@@ -37,6 +37,7 @@
 *           2016/01/12  1.19 add carrier-phase bias correction by ssr
 *           2016/07/31  1.20 fix error message problem in rnx2rtkp
 *           2016/08/29  1.21 suppress warnings
+*           2016/09/03  1.22 add output of patch level with version
 *-----------------------------------------------------------------------------*/
 #include "rtklib.h"
 
@@ -135,6 +136,7 @@ static void outheader(FILE *fp, char **file, int n, const prcopt_t *popt,
     if (sopt->outhead) {
         if (!*sopt->prog) {
             fprintf(fp,"%s program   : RTKLIB ver.%s\n",COMMENTH,VER_RTKLIB);
+            fprintf(fp,"%s program   : RTKLIB ver.%s %s\n",COMMENTH,VER_RTKLIB,PATCH_LEVEL);
         }
         else {
             fprintf(fp,"%s program   : %s\n",COMMENTH,sopt->prog);
