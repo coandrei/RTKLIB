@@ -12,6 +12,14 @@ OPTION = -DENAGLO -DENAGAL -DENAQZS -DENACMP -DENAIRN -DTRACE -DNFREQ=3 -DNEXOBS
 CFLAGS = -Wall -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) $(OPTION) $(CTARGET) -g
 LDLIBS  = -lm -lrt -lpthread
 
+# Mac OSX
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    # POSIX realtime extensions for Mac are in different library
+    CFLAGS  = -Wall -O3 -ansi -pedantic -Wno-unused-const-variable -I$(SRC) $(OPTION) $(CTARGET) -g
+    LDLIBS  = -lm -lSystem.B -lpthread
+endif
+
 all        : str2str
 str2str    : str2str.o stream.o rtkcmn.o solution.o sbas.o geoid.o
 str2str    : rcvraw.o novatel.o ublox.o ss2.o crescent.o skytraq.o gw10.o javad.o

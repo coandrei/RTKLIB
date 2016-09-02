@@ -13,6 +13,14 @@ CFLAGS = -O3 -ansi -pedantic -Wall -Wno-unused-but-set-variable $(INCLUDE) $(OPT
 
 LDLIBS = -lm -lrt
 
+# Mac OSX
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    # POSIX realtime extensions for Mac are in different library
+    CFLAGS  = -Wall -O3 -ansi -pedantic -Wno-unused-const-variable $(INCLUDE) $(OPTIONS) -g
+    LDLIBS  = -lm -lSystem.B
+endif
+
 all  : convbin
 
 convbin    : convbin.o rtkcmn.o rinex.o sbas.o preceph.o rcvraw.o convrnx.o

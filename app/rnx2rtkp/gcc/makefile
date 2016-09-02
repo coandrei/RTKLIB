@@ -3,7 +3,7 @@
 BINDIR  = /usr/local/bin
 SRC     = ../../../src
 
-OPTS    = -DTRACE -DENAGLO -DENAQZS -DENAGAL -DENACMP -DENAIRN -DNFREQ=3
+OPTS    = -DTRACE -DENAGLO -DENAQZS -DENAGAL -DENACMP -DENAIRN -DNFREQ=3 -DOUTSTAT_AMB
 #OPTS    = -DENAGLO -DENAQZS -DENAGAL -DENACMP -DNFREQ=2
 
 # for no lapack
@@ -22,6 +22,14 @@ LDLIBS  = -lm -lrt
 #MKLDIR  = /proj/madoca/lib/mkl
 #CFLAGS  = -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) $(OPTS) -DMKL
 #LDLIBS  = -L$(MKLDIR)/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lgomp -lm -lrt
+
+# Mac OSX
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    # POSIX realtime extensions for Mac are in different library
+    CFLAGS  = -Wall -O3 -ansi -pedantic -Wno-unused-const-variable -I$(SRC) $(OPTS) -g
+    LDLIBS  = -lm -lSystem.B
+endif
 
 all        : rnx2rtkp
 rnx2rtkp   : rnx2rtkp.o rtkcmn.o rinex.o rtkpos.o postpos.o solution.o
@@ -90,6 +98,7 @@ ephemeris.o: $(SRC)/rtklib.h
 options.o  : $(SRC)/rtklib.h
 ppp.o      : $(SRC)/rtklib.h
 ppp_ar.o   : $(SRC)/rtklib.h
+ppp_corr.o : $(SRC)/rtklib.h
 rtcm.o     : $(SRC)/rtklib.h
 rtcm2.o    : $(SRC)/rtklib.h
 rtcm3.o    : $(SRC)/rtklib.h

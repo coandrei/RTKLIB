@@ -10,6 +10,14 @@ CTARGET= -DENAGLO -DENAQZS -DENACMP -DENAGAL -DENAIRN -DNFREQ=3 -DSVR_REUSEADDR
 CFLAGS = -Wall -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) -I.. -DTRACE $(CTARGET) -g
 LDLIBS  = -lm -lrt -lpthread
 
+# Mac OSX
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    # POSIX realtime extensions for Mac are in different library
+    CFLAGS = -Wall -O3 -ansi -pedantic -Wno-unused-const-variable -I$(SRC) -I.. -DTRACE $(CTARGET) -g
+    LDLIBS = -lm -lSystem.B -lpthread
+endif
+
 all        : rtkrcv
 rtkrcv     : rtkrcv.o vt.o rtkcmn.o rtksvr.o rtkpos.o geoid.o solution.o lambda.o
 rtkrcv     : sbas.o stream.o rcvraw.o rtcm.o preceph.o options.o pntpos.o ppp.o ppp_ar.o
