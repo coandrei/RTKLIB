@@ -94,3 +94,21 @@ UPDATE HISTORY
 2016/09/05  2.4.3 b21 fix several bugs
 2016/09/06  2.4.3 b22 fix several bugs
                       add app/str2str/run_cast.sh for ntrip caster control 
+2016/09/06  2.4.3 b23 fix several bugs
+                      add -sys option for rnx2rtkp
+                      add 4- and 5-panel modes for rtknavi
+2016/09/19  2.4.3 b24 fix several bugs
+                      change api rtksvrstart()
+                      add minimized panel mode of rtklaunch
+                      add relay back message of output streams to strsvr
+                      add option -b to str2str
+                      support multiple remote console connections by rtkrcv
+                      add option -w to rtkrcv
+2016/09/25  2.4.3 b25 fix several bugs
+                      add ap rtkvideo
+                      add ap rtkvplayer
+                      change build environment to C++ builder 10.1 Berlin
+2016/10/01  2.4.3 b26 fix several bugs
+                      change api rtksvrstart(), strsvrstart()
+                      support udp server and client for stream types
+                      support periodic receiver commands by rtknavi, strsvr
