@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------
 * rtkcmn.c : rtklib common functions
 *
-*          Copyright (C) 2007-2015 by T.TAKASU, All rights reserved.
+*          Copyright (C) 2007-2018 by T.TAKASU, All rights reserved.
 *
 * options : -DLAPACK   use LAPACK/BLAS
 *           -DMKL      use Intel MKL
@@ -105,6 +105,10 @@
 *           2015/03/19 1.30 fix bug on interpolation of erp values in geterp()
 *                           add leap second insertion before 2015/07/01 00:00
 *                           add api read_leaps()
+*           2017/01/03 1.31 add leap second before 2017/1/1 00:00:00
+*           2018/01/29 1.32 chanage api crc16() -> rtk_crc16()
+*                           chanage api crc32() -> rtk_crc32()
+*                           chanage api crc24q() -> rtk_crc24q()
 *-----------------------------------------------------------------------------*/
 #define _POSIX_C_SOURCE 199309
 #include <stdarg.h>
@@ -130,6 +134,7 @@ const static double gst0 []={1999,8,22,0,0,0}; /* galileo system time reference 
 const static double bdt0 []={2006,1, 1,0,0,0}; /* beidou time reference */
 
 static double leaps[MAXLEAPS+1][7]={ /* leap seconds (y,m,d,h,m,s,utc-gpst) */
+    {2017,1,1,0,0,0,-18},
     {2015,7,1,0,0,0,-17},
     {2012,7,1,0,0,0,-16},
     {2009,1,1,0,0,0,-15},
@@ -644,7 +649,7 @@ extern void setbits(unsigned char *buff, int pos, int len, int data)
 * return : crc-32 parity
 * notes  : see NovAtel OEMV firmware manual 1.7 32-bit CRC
 *-----------------------------------------------------------------------------*/
-extern unsigned int crc32(const unsigned char *buff, int len)
+extern unsigned int rtk_crc32(const unsigned char *buff, int len)
 {
     unsigned int crc=0;
     int i,j;
@@ -666,7 +671,7 @@ extern unsigned int crc32(const unsigned char *buff, int len)
 * return : crc-24Q parity
 * notes  : see reference [2] A.4.3.3 Parity
 *-----------------------------------------------------------------------------*/
-extern unsigned int crc24q(const unsigned char *buff, int len)
+extern unsigned int rtk_crc24q(const unsigned char *buff, int len)
 {
     unsigned int crc=0;
     int i;
@@ -683,7 +688,7 @@ extern unsigned int crc24q(const unsigned char *buff, int len)
 * return : crc-16 parity
 * notes  : see reference [10] A.3.
 *-----------------------------------------------------------------------------*/
-extern unsigned short crc16(const unsigned char *buff, int len)
+extern unsigned short rtk_crc16(const unsigned char *buff, int len)
 {
     unsigned short crc=0;
     int i;
@@ -2336,7 +2341,7 @@ extern int geterp(const erp_t *erp, gtime_t time, double *erpv)
 {
     const double ep[]={2000,1,1,12,0,0};
     double mjd,day,a;
-    int i=0,j,k;
+    int i,j,k;
     
     trace(4,"geterp:\n");
     
